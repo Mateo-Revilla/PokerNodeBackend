@@ -3,23 +3,13 @@ const app = require('express')()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server, { serveClient: false })
 const cors = require('cors')
-const {Pool} = require('pg')
+const postgre = require('./postgre')
 app.use(cors())
 
+postgre.registerNewTable()
 
-//DATABSE
-const pool = new Pool({
-  user: 'master',
-  host: 'database.c8ib7ubvtm2x.us-east-2.rds.amazonaws.com',
-  database: 'pokerDatabase',
-  password: 'master12345',
-  port: 5432,
-})
 
-pool.query('SELECT * FROM tables_registered', (err, res) => {
-  console.log(err, res)
-  pool.end()
-})
+
 
 
 

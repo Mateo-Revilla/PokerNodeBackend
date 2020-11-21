@@ -1,0 +1,16 @@
+create table register (
+    table_id SERIAL PRIMARY KEY,
+    start_time bigint default 0,
+    small_blind integer default 5,
+    big_blind integer default 10,
+    max_number_participants integer default 8,
+    number_participants integer default 1,
+    initial_money integer default 1000,
+    paricipants_ids json,
+    participants_usernames json,
+    paritcipants_current_money json,
+    big_blind_position integer default 0,
+    number_of_plays integer default 0,
+    number_of_actions integer default 0
+)
+
