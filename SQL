@@ -1,3 +1,5 @@
+
+//ACTUAL SCHEMA
 create table register (
     table_id SERIAL PRIMARY KEY,
     start_time bigint default 0,
@@ -6,11 +8,38 @@ create table register (
     max_number_participants integer default 8,
     number_participants integer default 1,
     initial_money integer default 1000,
-    paricipants_ids json,
-    participants_usernames json,
-    paritcipants_current_money json,
+    participants_usernames TEXT[],
+    paritcipants_current_money INTEGER[],
     big_blind_position integer default 0,
-    number_of_plays integer default 0,
-    number_of_actions integer default 0
+    number_of_games integer default 0,
+    current_game_id: integer
 )
 
+
+
+//MORELESS SCHEMA STILL HAVE TO MAKE SOME WORK
+create table game (
+  game_id: integer,
+  table_id: integer,
+  pot: integer
+  participants_cards: [2D4H, 4D5H, 5C,5D]
+  table_cards: [2H, 1H, 1D, 1C, 1T] //this will always have the full complete 5 cards of the table
+  current_round_type: 0 // 0: preflop, 1: flop, 2: turn, 3:river
+  player_turn: 3
+  active_participants: [true, false, true, flase, flase]
+  matching_bet: 200
+  participants_bets: [20, 0, 20,40,60]
+  current_action_id: 234
+
+)
+
+
+
+create table action(
+  action_id: 43545
+  game_id: 453
+  player: INTEGER
+  action_type: "Bet" //bet, fold, call, check
+  bet: 200 //if bet is the action then how much
+  call: NULL //if called then how much
+)

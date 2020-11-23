@@ -6,12 +6,16 @@ const cors = require('cors')
 const postgre = require('./postgre')
 app.use(cors())
 
-postgre.registerNewTable()
 
 
 
 
 
+
+//-------------------------------------EXAMPLES-------------------------------------------
+
+//RUN TEST
+postgre.test()
 
 
 //SOCKET IO EXAMPLE

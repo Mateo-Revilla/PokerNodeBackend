@@ -11,25 +11,35 @@ const pool = new Pool({
     port: 5432,
   })
 
-  //-----------------------------EXAMPLE---------------------------------------
-  function example() {
-    pool.query('SELECT * FROM tables_registered', (err, res) => {
+  //-----------------------------EXAMPLE & TEST---------------------------------------
+
+  function example() {//RETURNS ALL THE TABLE IN REGISTERS
+    pool.query('SELECT * FROM register', (err, res) => {
         if (err) {
-          console.log(err.stack)
+          console.log(err)
         } else {
-          console.log(res.rows[0].code)
+          console.log(res)
         }
-        
         pool.end()
       })
   }
 
+  function test() {//ADD HERE WHATAVER YOU WANT TO TEST
+    example()
+    registerNewTable()
 
-  //-----------------------------CREATE TABLE---------------------------------------
+  }
+
+
+  //-----------------------------REGISTER TABLE--------------------------------------
 
   //REGISTER NEW TABLE
   function registerNewTable() {
+    //VARIABLES TO UPDATE
     const time = Date.now()
+    /*MISSING IMPLEMENTATION OF small_blind, big_blind, number_participants,
+    max_number_participants, initial_money, participants_usernames, paritcipants_current_money
+    */
     const registerQuery = {
         text: 'insert into register(start_time) values($1) returning table_id',
         values: [time]
@@ -41,21 +51,68 @@ const pool = new Pool({
         } else {
             const table_id = resRegister.rows[0].table_id //table_id created
             console.log(table_id)
-            return table_id       
+            //CONTINUE IMPLEMENTING REGISTRATION
             }
     })
 
   }
 
-  
 
-  
+  //Add New participants
+
+  function addNewParticipant() {
+
+  }
+
+  //GET INFO FOR table with id
+
+  function getInfoForTableID(table_id) {
+    /*return the information of this table*/
+  }
 
 
-  
+
+  //-----------------------------GAME TABLE--------------------------------------
+
+  //Create a rows
+  //It should deal cards and assign cards to participants
+  //Assign the table cards
+  //Update current_game_id in register table big_blind psoition and number of games
+
+  function newGame(table_id) {
+
+  }
+
+
+  //Update current_round_type
+
+  function  updateCurrentRoundType(number){
+    /*Update table_cards_active to number*/
+  }
+
+
+
+
+  //-----------------------------ACTION TABLE--------------------------------------
+
+
+//UPdate game player turn, active participants, matching bet, participantsbets, current_action_id
+function newAction(game_id, player, action_type, bet, call) {
+
+}
+
+
+
+
+
+
+
+
+
 
 //-----------------------------EXPORTS---------------------------------------
 
   module.exports = {
+    test,
     registerNewTable
   }
