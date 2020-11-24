@@ -17,17 +17,17 @@ create table register (
 
 
 
-//MORELESS SCHEMA STILL HAVE TO MAKE SOME WORK
+//MORELESS SCHEMA STILL HAVE TO MAKE SOME WORK (MATEO)
 create table game (
   game_id: integer,
   table_id: integer,
   pot: integer
-  participants_cards: [2D4H, 4D5H, 5C,5D]
+  participants_cards: [2D4H, 4D4H, 5C5D]
   table_cards: [2H, 1H, 1D, 1C, 1T] //this will always have the full complete 5 cards of the table
-  current_round_type: 0 // 0: preflop, 1: flop, 2: turn, 3:river
+  current_round_type: 0 // 0: preflop(0), 1: flop(3), 2: turn(4), 3:river(5)
   player_turn: 3
   active_participants: [true, false, true, flase, flase]
-  matching_bet: 200
+  matching_bet: 200   //once every player has been given the chance to meet the matching bet
   participants_bets: [20, 0, 20,40,60]
   current_action_id: 234
 
@@ -35,11 +35,10 @@ create table game (
 
 
 
-create table action(
+create table action( (MATEO)
   action_id: 43545
   game_id: 453
   player: INTEGER
   action_type: "Bet" //bet, fold, call, check
-  bet: 200 //if bet is the action then how much
-  call: NULL //if called then how much
+  amount: 200 //if bet/call is the action then how much
 )

@@ -18,7 +18,7 @@ const pool = new Pool({
         if (err) {
           console.log(err)
         } else {
-          console.log(res)
+          console.log(res.rows)
         }
         pool.end()
       })
@@ -26,15 +26,14 @@ const pool = new Pool({
 
   function test() {//ADD HERE WHATAVER YOU WANT TO TEST
     example()
-    registerNewTable()
-
   }
 
 
   //-----------------------------REGISTER TABLE--------------------------------------
 
-  //REGISTER NEW TABLE
-  function registerNewTable() {
+  //REGISTER NEW TABLE (MATEO)
+  function registerNewTable(small_blind, big_blind, number_participants,
+    max_number_participants, initial_money, participants_usernames, paritcipants_current_money) {
     //VARIABLES TO UPDATE
     const time = Date.now()
     /*MISSING IMPLEMENTATION OF small_blind, big_blind, number_participants,
@@ -58,13 +57,13 @@ const pool = new Pool({
   }
 
 
-  //Add New participants
+  //Add New participants (FELIKS)
 
   function addNewParticipant() {
 
   }
 
-  //GET INFO FOR table with id
+  //GET INFO FOR table with id (FELIKS)
 
   function getInfoForTableID(table_id) {
     /*return the information of this table*/
@@ -74,7 +73,7 @@ const pool = new Pool({
 
   //-----------------------------GAME TABLE--------------------------------------
 
-  //Create a rows
+  //Create a rows (MATEO)
   //It should deal cards and assign cards to participants
   //Assign the table cards
   //Update current_game_id in register table big_blind psoition and number of games
@@ -84,7 +83,7 @@ const pool = new Pool({
   }
 
 
-  //Update current_round_type
+  //Update current_round_type (FELIKS)
 
   function  updateCurrentRoundType(number){
     /*Update table_cards_active to number*/
@@ -96,8 +95,8 @@ const pool = new Pool({
   //-----------------------------ACTION TABLE--------------------------------------
 
 
-//UPdate game player turn, active participants, matching bet, participantsbets, current_action_id
-function newAction(game_id, player, action_type, bet, call) {
+//UPdate game player turn, active participants, matching bet, participantsbets, current_action_id (FELIKS)
+function newAction(game_id, player, action_type, amount) {
 
 }
 
