@@ -15,25 +15,34 @@ app.use(cors())
 //-------------------------------------EXAMPLES-------------------------------------------
 
 //RUN TEST
-postgre.test()
+//postgre.test()
 
 
 //SOCKET IO EXAMPLE
 let timer
 
 io.on('connection', (socket) => {
-  socket.join(socket.id)
-  const time = () => {
-    const d = new Date();
-    socket.emit(socket.id, d.toLocaleTimeString())
-  }
+  socket.join("main")
   console.log('a user connected')
-  timer = setInterval(() => time(), 1000)
+
   socket.on('disconnect', () => {
     console.log('user disconnected')
     clearInterval(timer)
   })
+
 })
+
+
+let users = []
+
+const newUser = () => {
+  console.log('A')
+  let newUser = "user " + Math.floor((Math.random() * 10) + 1);
+  users.push(newUser)
+  io.to("main").emit("lobby", users)
+}
+
+timer = setInterval(() => newUser(), 3000)
 
 
 
