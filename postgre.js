@@ -32,8 +32,7 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
 //-----------------------------REGISTER TABLE--------------------------------------
 
   //REGISTER NEW TABLE (MATEO)
-  function registerNewTable(small_blind, big_blind, number_participants,
-    max_number_participants, initial_money, participants_usernames, paritcipants_current_money) {
+  function registerNewTable(res, username) {
     //VARIABLES TO UPDATE
     const time = Date.now()
     /*MISSING IMPLEMENTATION OF small_blind, big_blind, number_participants,
@@ -50,6 +49,7 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
         } else {
             const table_id = resRegister.rows[0].table_id //table_id created
             console.log(table_id)
+            res.send({"table_id": table_id});
             //CONTINUE IMPLEMENTING REGISTRATION
             }
     })
@@ -272,7 +272,7 @@ function newAction(game_id, player, action_type, amount) {
         }
     })
 
-    
+
 
 }
 

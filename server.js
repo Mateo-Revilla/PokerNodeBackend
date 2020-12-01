@@ -10,7 +10,15 @@ app.use(cors())
 
 
 
+//-------------------------------------REST API-------------------------------------------
 
+app.get('/create', (req, res) => {
+  console.log("POST HTTP")
+  console.log(req.header("username"))
+  const username = req.header("username")
+  postgre.registerNewTable(res, username)
+
+});
 
 //-------------------------------------EXAMPLES-------------------------------------------
 
@@ -18,10 +26,14 @@ app.use(cors())
 //postgre.test()
 
 
+
+
+
 //SOCKET IO EXAMPLE
 let timer
 
 io.on('connection', (socket) => {
+
   socket.join("main")
   console.log('a user connected')
 
@@ -30,16 +42,23 @@ io.on('connection', (socket) => {
     clearInterval(timer)
   })
 
+  socket.on('newParticipant', (data) => {
+    console.log(data.username)
+    console.log(data.table_id)
+    socket.join(data.table_id)
+  })
+
 })
 
 
 let users = []
 
 const newUser = () => {
-  console.log('A')
-  let newUser = "user " + Math.floor((Math.random() * 10) + 1);
+  console.log('send to lobby')
+  let newUser = "user "
   users.push(newUser)
   io.to("main").emit("lobby", users)
+
 }
 
 timer = setInterval(() => newUser(), 3000)
