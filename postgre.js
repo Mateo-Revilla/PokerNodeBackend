@@ -25,7 +25,7 @@ function example() {//RETURNS ALL THE TABLE IN REGISTERS
 }
 
 function test() {//ADD HERE WHATAVER YOU WANT TO TEST
-  example()
+  //addNewParticipant(3, "serpiente", 4)
 }
 
 
@@ -34,13 +34,10 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
   //REGISTER NEW TABLE (MATEO)
   function registerNewTable(res, username) {
     //VARIABLES TO UPDATE
-    const time = Date.now()
-    /*MISSING IMPLEMENTATION OF small_blind, big_blind, number_participants,
-    max_number_participants, initial_money, participants_usernames, paritcipants_current_money
-    */
+
     const registerQuery = {
-        text: 'insert into register(start_time) values($1) returning table_id',
-        values: [time]
+        text: 'insert into register(participants_usernames, paritcipants_current_money) values($1, $2) returning table_id',
+        values: ['{username}', '{1000}']
     }
     pool.query(registerQuery, (errRegister, resRegister) => { //insert to register table
          if (errRegister) {
@@ -49,7 +46,7 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
         } else {
             const table_id = resRegister.rows[0].table_id //table_id created
             console.log(table_id)
-            res.send({"table_id": table_id});
+            res.send({"table_id": table_id, "participants_usernames": [username]});
             //CONTINUE IMPLEMENTING REGISTRATION
             }
     })
@@ -59,90 +56,24 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
 
   //Add New participants (FELIKS)
 
-  function addNewParticipant(username, table_id) {
-    //  const registerQuery = {
-    //      text: 'insert into register(start_time) values($1) returning table_id',
-    //      values: []
-   //   }
-      let max = "0"
-      //'SELECT DISTINCT max_number_participants FROM register'
-      pool.query('SELECT DISTINCT max_number_participants FROM register', (errMax, resMax) => {
-          if (errMax)
-          {
-              console.log(errMax)
-              return null
-          } else
-              {
-              console.log(resMax.rows[0])
-              max = resMax.rows[0].max_number_participants
-          }
+  function addNewParticipant(io, res, username, table_id) {
 
-      })
+    const addParticipantsQuery = {
+        text: 'UPDATE register SET participants_usernames[number_participants + 1] = $1 , paritcipants_current_money[number_participants + 1] = initial_money, number_participants = number_participants + 1  WHERE (table_id = $2 AND number_participants < 6) returning participants_usernames',
+        values: [username, table_id]
+    }
 
-
-      if (max < Number("8"))
-      {
-          const newParicipant = {
-              text: 'UPDATE register SET participants_usernames = append_array(participants_usernames, values($1)) WHERE table_id = values($2)',
-              values: [username, table_id]
-          }
-
-
-          pool.query(newParicipant, (errParicipant, resParicipant) => { //insert to register user
-              if (errParicipant)
-              {
-                  console.log(errParicipant)
-                  return null
-              }
-
-              else
-
-              {
-                  const table_row = resParicipant.rows[0]
-                  console.log(table_row)
-
-              }
-          })
-
-
-          const setMoney = {
-              text: 'UPDATE register SET paritcipants_current_money = append_array(paritcipants_current_money, values($1)) WHERE table_id = values($2)',
-              values: ["1000", table_id]
-          }
-
-          pool.query(setMoney, (errSetMoney, resSetMoney) => { //insert to register user
-              if (errSetMoney)
-              {
-                  console.log(errSetMoney)
-                  return null
-              }
-
-              else
-
-              {
-                  const table_row = resSetMoney.rows[0]
-                  console.log(table_row)
-
-              }
-          })
-
-
-
-
-
-
-      }
-    /*
-      pool.query('SELECT max_number_participants FROM register WHERE table_id = values($1)', (err, res) => {
-          if (err)
-          {
-              console.log(err)
-          } else
-          {
-              console.log(res.rows)
-          }
-          pool.end()
-      }) */
+    pool.query(addParticipantsQuery, (errAdd, resAdd) => { //insert to register table
+         if (errAdd) {
+            console.log(errAdd)
+            return null
+        } else {
+            const currentParticipants= resAdd.rows[0].participants_usernames //table_id created
+            console.log(currentParticipants)
+            res.send({"table_id": table_id, "participants_usernames": currentParticipants});
+            io.to(table_id).emit("lobby", currentParticipants)
+            }
+    })
 
 
 
@@ -289,5 +220,6 @@ function newAction(game_id, player, action_type, amount) {
 
   module.exports = {
     test,
-    registerNewTable
+    registerNewTable,
+    addNewParticipant
   }

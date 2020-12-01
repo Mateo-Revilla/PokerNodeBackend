@@ -13,17 +13,24 @@ app.use(cors())
 //-------------------------------------REST API-------------------------------------------
 
 app.get('/create', (req, res) => {
-  console.log("POST HTTP")
-  console.log(req.header("username"))
   const username = req.header("username")
   postgre.registerNewTable(res, username)
+
+});
+
+
+app.get('/join', (req, res) => {
+  const table_id = req.header("table_id")
+  const username = req.header("username")
+
+  postgre.addNewParticipant(io,res, username, table_id)
 
 });
 
 //-------------------------------------EXAMPLES-------------------------------------------
 
 //RUN TEST
-//postgre.test()
+postgre.test()
 
 
 
@@ -42,9 +49,7 @@ io.on('connection', (socket) => {
     clearInterval(timer)
   })
 
-  socket.on('newParticipant', (data) => {
-    console.log(data.username)
-    console.log(data.table_id)
+  socket.on('connectToRoom', (data) => {
     socket.join(data.table_id)
   })
 
@@ -54,10 +59,10 @@ io.on('connection', (socket) => {
 let users = []
 
 const newUser = () => {
-  console.log('send to lobby')
+  //console.log('send to lobby')
   let newUser = "user "
   users.push(newUser)
-  io.to("main").emit("lobby", users)
+  //io.to("main").emit("lobby", users)
 
 }
 
