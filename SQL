@@ -2,10 +2,9 @@
 //ACTUAL SCHEMA
 create table register (
     table_id SERIAL PRIMARY KEY,
-    start_time bigint default 0,
+    started boolean default false,
     small_blind integer default 5,
     big_blind integer default 10,
-    max_number_participants integer default 8,
     number_participants integer default 1,
     initial_money integer default 1000,
     participants_usernames TEXT[],

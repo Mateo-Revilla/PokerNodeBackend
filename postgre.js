@@ -37,7 +37,7 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
 
     const registerQuery = {
         text: 'insert into register(participants_usernames, paritcipants_current_money) values($1, $2) returning table_id',
-        values: ['{username}', '{1000}']
+        values: ['{' + username + '}', '{1000}']
     }
     pool.query(registerQuery, (errRegister, resRegister) => { //insert to register table
          if (errRegister) {
