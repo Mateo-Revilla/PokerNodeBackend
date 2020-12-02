@@ -46,7 +46,7 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
         } else {
             const table_id = resRegister.rows[0].table_id //table_id created
             console.log(table_id)
-            res.send({"table_id": table_id, "participants_usernames": [username]});
+            res.send({"table_id": table_id, "participants_usernames": [username], "player_id": 0});
             //CONTINUE IMPLEMENTING REGISTRATION
             }
     })
@@ -59,7 +59,7 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
   function addNewParticipant(io, res, username, table_id) {
 
     const addParticipantsQuery = {
-        text: 'UPDATE register SET participants_usernames[number_participants + 1] = $1 , paritcipants_current_money[number_participants + 1] = initial_money, number_participants = number_participants + 1  WHERE (table_id = $2 AND number_participants < 6) returning participants_usernames',
+        text: 'UPDATE register SET participants_usernames[number_participants + 1] = $1 , paritcipants_current_money[number_participants + 1] = initial_money, number_participants = number_participants + 1  WHERE (table_id = $2 AND number_participants < 6 AND started = false ) returning * ',
         values: [username, table_id]
     }
 
@@ -68,10 +68,11 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
             console.log(errAdd)
             return null
         } else {
-            const currentParticipants= resAdd.rows[0].participants_usernames //table_id created
-            console.log(currentParticipants)
-            res.send({"table_id": table_id, "participants_usernames": currentParticipants});
-            io.to(table_id).emit("lobby", currentParticipants)
+          console.log(resAdd.rows[0])
+            const currentParticipants= resAdd.rows[0].participants_usernames
+            const player_id = resAdd.rows[0].number_participants  - 1
+            res.send({"table_id": table_id, "participants_usernames": currentParticipants, "player_id": player_id});
+            io.to("table:" + table_id).emit("lobby", currentParticipants)
             }
     })
 
@@ -79,34 +80,29 @@ function test() {//ADD HERE WHATAVER YOU WANT TO TEST
 
   }
 
-  //GET INFO FOR table with id (FELIKS)
+  //STARTED TABLE
 
-  function getInfoForTableID(table_id) {
-    /*return the information of this table*/
-      const seeTableIdQuery = {
-          text: 'SELECT * FROM register WHERE table_id = values($1)',
-          values: [table_id]
-      }
+  function startTable(io, table_id, player_id) {
+    const setStarted = {
+        text: 'UPDATE register SET started = true WHERE table_id = $1 ',
+        values: [table_id]
+    }
 
-
-      pool.query(seeTableIdQuery, (errSeeTable, resSeeTable) => { //insert to register user
-          if (errSeeTable)
+    if (player_id == 0) {
+      pool.query(setStarted, (errSetStarted, resSetStarted) => { //insert to register user
+          if (errSetStarted)
           {
-              console.log(errSeeTable)
-              return null
+              console.log(errSetStarted)
           }
 
           else
 
           {
-              const table_row = resSeeTable.rows[0]
-              console.log(resSeeTable.fields.map(field => field.name))
-              console.log(table_row)
+              io.to("table:" +table_id).emit("start", {"start": true})
 
           }
       })
-
-
+    }
   }
 
 
@@ -221,5 +217,6 @@ function newAction(game_id, player, action_type, amount) {
   module.exports = {
     test,
     registerNewTable,
-    addNewParticipant
+    addNewParticipant,
+    startTable
   }

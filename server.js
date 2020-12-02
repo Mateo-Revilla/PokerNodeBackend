@@ -50,13 +50,17 @@ io.on('connection', (socket) => {
   })
 
   socket.on('connectToRoom', (data) => {
-    socket.join(data.table_id)
+    socket.join("table:" + data.table_id)
+  })
+
+  socket.on('sendStart', (data) => {
+    postgre.startTable(io, data.table_id, data.player_id)
   })
 
 })
 
 
-let users = []
+/*let users = []
 
 const newUser = () => {
   //console.log('send to lobby')
@@ -66,7 +70,7 @@ const newUser = () => {
 
 }
 
-timer = setInterval(() => newUser(), 3000)
+timer = setInterval(() => newUser(), 3000)*/
 
 
 
